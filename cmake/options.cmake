@@ -53,8 +53,13 @@ set(MKLDNN_INSTALL_MODE "DEFAULT" CACHE STRING
     which contains examples and benchdnn.
     The BUNDLE option requires MKLDNN_USE_MKL be set to FULL:STATIC.")
 
-set(MKLDNN_THREADING "OMP" CACHE STRING
-    "specifies threading type; supports OMP (default), OMP:COMP, OMP:INTEL, or TBB.
+if (USE_CPU_SINGLE_THREAD)
+    message(STATUS "MKLDNN_THREADING using SEQ")
+    set(MKLDNN_THREADING "SEQ" CACHE STRING
+            "SEQ  for single thread option")
+else()
+    set(MKLDNN_THREADING "OMP" CACHE STRING
+            "specifies threading type; supports OMP (default), OMP:COMP, OMP:INTEL, or TBB.
 
     When OpenMP is used a user can choose what runtime to use:
     - native OpenMP runtime that comes with the compiler (OMP:COMP), or
@@ -69,6 +74,7 @@ set(MKLDNN_THREADING "OMP" CACHE STRING
     To use Intel(R) Threading Building Blocks (Intel(R) TBB) one should also
     set TBBROOT (either environment variable or CMake option) to the library
     location")
+endif()
 
 set(MKLDNN_USE_MKL "DEF" CACHE STRING
     "specifies what Intel MKL library to use.
